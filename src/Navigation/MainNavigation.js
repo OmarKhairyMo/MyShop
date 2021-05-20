@@ -1,5 +1,6 @@
 import "react-native-gesture-handler";
 import React from "react";
+import { Image } from "react-native";
 // Navigation Packtges
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -14,16 +15,44 @@ import CartScreen from "../Screens/Shop/CartScreen";
 import OrdersScreen from "../Screens/Shop/OrdersScreen";
 // Custom Drawer
 import DrawerContent from "./DrawerContent";
+import { NavThem } from "../Theme/NavigationThem";
+import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const stackStyle = {
+  headerTitle: (
+    <Image
+      style={{
+        width: 80,
+        height: 50,
+        shadowOpacity: 0.2,
+      }}
+      source={require("../../assets/nikeLogo.png")}
+    />
+  ),
   headerTitleStyle: { color: theme.colors.priamary },
   headerRight: () => {
     return <RightHeader />;
   },
   headerLeft: () => {
-    return <LeftButton />;
+    const navigation = useNavigation();
+    return (
+      <LeftButton
+        onPress={() => {
+          navigation.openDrawer();
+        }}
+        icon={
+          <Image
+            style={{ width: 23, height: 23 }}
+            source={{
+              uri: "https://www.publicdomainpictures.net/pictures/70000/nahled/4-dots.jpg",
+            }}
+          />
+        }
+      />
+    );
   },
 };
 
@@ -42,18 +71,34 @@ const CartStackNavigator = () => {
     </Stack.Navigator>
   );
 };
-const HomeStackNavigator = () => {
+const HomeStackNavigator = ({ navigation }) => {
   return (
     <Stack.Navigator screenOptions={stackStyle}>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Detailes" component={Detailes} />
+      <Stack.Screen name="Home1" component={Home} />
+      <Stack.Screen
+        name="Detailes"
+        component={Detailes}
+        options={{
+          headerTransparent: true,
+          headerLeft: () => {
+            return (
+              <LeftButton
+                onPress={() => {
+                  navigation.navigate("Home1");
+                }}
+                icon={<AntDesign name="left" size={24} color="black" />}
+              />
+            );
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 };
 
 export default () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={NavThem}>
       <Drawer.Navigator
         drawerType="slide"
         drawerContent={(props) => {
